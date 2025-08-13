@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Hipergeometrica</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #fafafa;
+        }
+
+        h2 {
+            color: rgb(5, 4, 4);
+            text-align: center;
+            margin-top: 1em;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 2em auto;
+            background: #bd969600;
+            padding: 1.5em;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+        }
+
+        label {
+            margin-bottom: .3em;
+            font-size: 1em;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: .7em .6em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        body {
+        background-image: url('https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/368c5634-1556-48e4-8b69-fb3c677998cc/deh3pj1-1314483e-ff5a-49ff-9b71-c7d0eb8eedac.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzM2OGM1NjM0LTE1NTYtNDhlNC04YjY5LWZiM2M2Nzc5OThjY1wvZGVoM3BqMS0xMzE0NDgzZS1mZjVhLTQ5ZmYtOWI3MS1jN2QwZWI4ZWVkYWMuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.ktbXfSvBbi6tPHdvIz4vNPSPU4-3RblgmWwf6wsw9G8'); /* Specify the image path */
+        background-size: cover; /* Ensures the image covers the entire background */
+        background-repeat: no-repeat; /* Prevents the image from repeating */
+        background-position: center center; /* Centers the image */
+        background-attachment: fixed; /* Keeps the image fixed when scrolling */
+    	}
+        
+        button {
+            padding: .8em 0;
+            background: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 1em;
+        }
+
+        button:hover {
+            background: #217dbb;
+        }
+
+        @media (max-width: 500px) {
+            form {
+                margin: 1em 1em;
+                padding: 1em;
+            }
+            h2 {
+                font-size: 1.4em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2><b><big>Calculadora Hipergeometrica</big></b></h2>
+    <form id="hypergeometricForm">
+        <label for="popSize">Cartas no deck:</label>
+        <input type="number" id="popSize" name="popSize" required><br>
+
+        <label for="sampleSize">Quantos draws:</label>
+        <input type="number" id="sampleSize" name="sampleSize" required><br>
+
+        <label for="successesInPop">Quantos Outs:</label>
+        <input type="number" id="successesInPop" name="successesInPop" required><br>
+
+        <label for="successesNeeded">Sucessos necessários:</label>
+        <input type="number" id="successesNeeded" name="successesNeeded" required><br>
+
+        <button type="button" onclick="runCalculations()">Calcular</button>
+    </form>
+
+    <script>
+        function fat(x) {
+            let soma = 0;
+            for (let i = 0; i < x; i++) {
+                soma += Math.log(x - i);
+            }
+            return soma;
+        }
+
+        function escolhe(x, y) {
+            return fat(x) - fat(y) - fat(x - y);
+        }
+
+        function hypergeometric_log_prob(N, n, K, k) {
+            const log_comb_K_k = escolhe(K, k);
+            const log_comb_NK_nk = escolhe(N - K, n - k);
+            const log_comb_N_n = escolhe(N, n);
+            return log_comb_K_k + log_comb_NK_nk - log_comb_N_n;
+        }
+
+        function runCalculations() {
+            const P = parseInt(document.getElementById('popSize').value, 10);
+            const A = parseInt(document.getElementById('sampleSize').value, 10);
+            const S = parseInt(document.getElementById('successesInPop').value, 10);
+            const N = parseInt(document.getElementById('successesNeeded').value, 10);
+
+            let html_temp = `
+            <html>
+            <head>
+                <title>Calculadora Hipergeometrica</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    body {background-image: url('https://www.originalmagicart.store/cdn/shop/products/Eureka.jpg?v=1605337593'); 
+        background-size: cover; /* Ensures the image covers the entire background */
+        background-repeat: no-repeat; /* Prevents the image from repeating */
+        background-position: center center; /* Centers the image */
+        background-attachment: fixed; /* Keeps the image fixed when scrolling */
+        font-family: sans-serif; 
+        margin: 0; 
+        padding: 0; 
+            	}    		  
+                    h2 { text-align: center; margin-top: 1em; }
+                    .result { max-width: 400px; margin: 2em auto; background: #fff; padding: 1.5em; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+                    p { font-size: 1.1em; }
+                    @media (max-width: 500px) {
+                        .result { margin: 1em 1em; padding: 1em; }
+                        h2 { font-size: 1.4em; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="result">
+                <h2>Resultado da Calculadora Hipergeometrica</h2>
+            `;
+
+            const Probabilidade_exata = new Array(S + 1);
+            const Probabilidade_pelo_menos = new Array(S + 1);
+            let soma = 0;
+
+            for (let i = 0; i <= S; i++) {
+                const teste = hypergeometric_log_prob(P, A, S, i);
+                Probabilidade_exata[i] = teste;
+            }
+
+            for (let j = 0; j <= S; j++) {
+                soma += Math.exp(Probabilidade_exata[j]);
+                const pp = 1 - soma;
+
+                if (j === N) {
+                    const pe = Math.exp(Probabilidade_exata[j]);
+                    html_temp += `<p>CHANCE DE PELO MENOS ${j} OUTS: <strong>${(100 * (pp + pe)).toFixed(5)}%</strong></p>`;
+                    html_temp += `<p>CHANCE DE EXATAMENTE ${j} OUTS: <strong>${(100 * pe).toFixed(5)}%</strong></p>`;
+                }
+
+                Probabilidade_pelo_menos[j] = soma;
+            }
+
+            html_temp += `</div></body></html>`;
+
+            const blob = new Blob([html_temp], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+
+</html>
